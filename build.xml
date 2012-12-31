@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="pearl">
+    <property environment="env"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <path id="java.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="deps/ejml-0.20.jar"/>
+        <pathelement location="deps/commons-math3-3.1.jar" />
+        <pathelement location="deps/commons-math3-3.1-javadoc.jar" />
+        <pathelement location="deps/JavaRLGlueCodec.jar" />
+        <pathelement location="deps/fig.jar"/>
+        <pathelement location="deps/junit-4.10.jar" />
+        <pathelement location="deps/Jama-1.0.3.jar" />
+        <pathelement location="deps/hamcrest.jar" />
+        <pathelement location="deps/javatuples-1.2.jar"/>
+        <pathelement location="deps/javatuples-1.2-javadoc.jar"/>
+        <pathelement location="deps/KittyCache-1.2.jar" />
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project,build-tests" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac includeantruntime="false" debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="java.classpath"/>
+        </javac>
+    </target>
+    <target depends="build-project" name="build-tests">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac includeantruntime="false" debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="tests"/>
+            <classpath refid="java.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target depends="build-tests" name="test">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="plain"/>
+            <batchtest todir="${junit.output.dir}">
+                <fileset dir="tests">
+                  <include name="**/*Test*.java"/>
+                  <exclude name="**/AllTests.java"/>
+                </fileset>
+              </batchtest>
+            <classpath refid="java.classpath"/>
+        </junit>
+    </target>
+</project>
