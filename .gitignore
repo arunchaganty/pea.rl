@@ -1,0 +1,27 @@
+# Temporary Files
+*.swp
+*.swo
+*.pyc
+*.pyo
+*.o
+cscope.out
+tags
+*.lprof
+
+# Java
+*.class
+
+# TeX
+*.log
+*.aux
+*.out
+*.nav
+*.toc
+*.snm
+*.pdf
+*.dvi
+*_tmp.*
+
+# Temporary stuff
+*.sh
+attic/
